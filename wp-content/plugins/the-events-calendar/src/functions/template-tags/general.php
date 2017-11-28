@@ -47,6 +47,18 @@ if ( class_exists( 'Tribe__Events__Main' ) ) {
 		}
 	}
 
+	add_filter( 'wp_trim_words', 'tribe_preserve_html_in_excerpt', 10, 4 );
+	function tribe_preserve_html_in_excerpt( $text, $num_words, $more, $original_text ) {
+		
+		remove_filter( 'wp_trim_words', 'tribe_preserve_html_in_excerpt', 10 );
+		
+		$excerpt = force_balance_tags( html_entity_decode( wp_trim_words( htmlentities( $original_text ) ) ) );
+		
+		add_filter( 'wp_trim_words', 'tribe_preserve_html_in_excerpt', 10, 4 );
+		
+		return $excerpt;
+	}
+
 	/**
 	 * Get Event Label Singular
 	 *
